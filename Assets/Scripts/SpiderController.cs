@@ -3,10 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SpiderController : MonoBehaviour
 {
-    [SerializeField] private float _floatingHeight = 2;
-    [SerializeField] private float _floatingForce = 1;
-    [SerializeField] private float _moveSpeed = 5;
-    [SerializeField] private float _rotateSpeed = 5;
+    [SerializeField] private ControlSettings _controlSettings;
 
     private Rigidbody _rigidbody;
 
@@ -39,7 +36,7 @@ public class SpiderController : MonoBehaviour
             _timeToUp = true;
 
             Ray ray = new Ray(hit.point, Vector3.up);
-            _forceDirection = (ray.GetPoint(_floatingHeight) - transform.position) * _floatingForce;
+            _forceDirection = (ray.GetPoint(_controlSettings.FloatingHeight) - transform.position) * _controlSettings.FloatingForce;
         }
 
         return _timeToUp;
@@ -50,11 +47,20 @@ public class SpiderController : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
-        _moveDirection = transform.forward * vertical * _moveSpeed;
+        _moveDirection = transform.forward * vertical * _controlSettings.MoveSpeed;
 
         if (horizontal != 0)
-            _rigidbody.AddTorque(0, horizontal * _rotateSpeed, 0);
+            _rigidbody.AddTorque(0, horizontal * _controlSettings.RotateSpeed, 0);
         else
             _rigidbody.rotation = transform.rotation;
     }
+}
+
+[System.Serializable]
+public struct ControlSettings
+{
+    public float FloatingHeight;
+    public float FloatingForce;
+    public float MoveSpeed;
+    public float RotateSpeed;
 }
