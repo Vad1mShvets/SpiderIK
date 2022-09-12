@@ -5,6 +5,8 @@ public class SpiderController : MonoBehaviour
 {
     [SerializeField] private ControlSettings _controlSettings;
 
+    [SerializeField] private LegData[] _legs;
+
     private Rigidbody _rigidbody;
 
     private Vector3 _forceDirection;
@@ -24,6 +26,8 @@ public class SpiderController : MonoBehaviour
     {
         if (CheckHeight())
             _rigidbody.velocity = _forceDirection + _moveDirection;
+
+        LegsMove();
     }
 
     private bool CheckHeight()
@@ -54,6 +58,14 @@ public class SpiderController : MonoBehaviour
         else
             _rigidbody.rotation = transform.rotation;
     }
+
+    private void LegsMove()
+    {
+        foreach (var leg in _legs)
+        {
+            leg.LegTransform.transform.position = leg.LegRaycast.LegRaycastPoint;
+        }
+    }
 }
 
 [System.Serializable]
@@ -63,4 +75,11 @@ public struct ControlSettings
     public float FloatingForce;
     public float MoveSpeed;
     public float RotateSpeed;
+}
+
+[System.Serializable]
+public struct LegData
+{
+    public Transform LegTransform;
+    public LegRaycast LegRaycast;
 }
