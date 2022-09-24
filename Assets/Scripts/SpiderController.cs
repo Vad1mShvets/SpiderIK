@@ -102,6 +102,7 @@ public class SpiderController : MonoBehaviour
 [System.Serializable]
 public struct ControlSettings
 {
+    public Joystick JoystickController;
     public float FloatingHeight;
     public float FloatingForce;
     public float MoveSpeed;
