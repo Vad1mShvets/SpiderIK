@@ -110,7 +110,7 @@ public struct ControlSettings
 }
 
 [System.Serializable]
-public struct LegData
+public class LegData
 {
     public Vector3 TargetLegPosition;
     public Transform LegTransform;
