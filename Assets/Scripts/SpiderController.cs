@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -15,6 +16,16 @@ public class SpiderController : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+
+        StartCoroutine(Init());
+    }
+
+    private IEnumerator Init()
+    {
+        yield return new WaitForEndOfFrame();
+
+        for (int i = 0; i < _legs.Length; i++)
+            _legs[i].TargetLegPosition = _legs[i].LegRaycast.RaycastPoint;
     }
 
     private void Update()
@@ -61,10 +72,30 @@ public class SpiderController : MonoBehaviour
 
     private void LegsMove()
     {
-        foreach (var leg in _legs)
+        for (int i = 0; i < _legs.Length; i++)
         {
-            leg.LegTransform.transform.position = leg.LegRaycast.LegRaycastPoint;
+            var leg = _legs[i];
+
+            Vector3 direction = leg.LegRaycast.RaycastPoint - leg.TargetLegPosition;
+
+            if (direction.magnitude >= _controlSettings.StepLength)
+            {
+                StartCoroutine(MakeStep(leg));
+            }
+            else
+            {
+                leg.LegTransform.position = leg.TargetLegPosition;
+            }
         }
+    }
+
+    private IEnumerator MakeStep(LegData leg)
+    {
+        leg.TargetLegPosition = leg.LegRaycast.RaycastPoint;
+
+        leg.LegTransform.position = leg.LegRaycast.RaycastPoint;
+
+        yield return null;
     }
 }
 
@@ -75,11 +106,13 @@ public struct ControlSettings
     public float FloatingForce;
     public float MoveSpeed;
     public float RotateSpeed;
+    public float StepLength;
 }
 
 [System.Serializable]
 public struct LegData
 {
+    public Vector3 TargetLegPosition;
     public Transform LegTransform;
     public LegRaycast LegRaycast;
 }

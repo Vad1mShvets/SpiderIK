@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LegRaycast : MonoBehaviour
 {
-    public Vector3 LegRaycastPoint { get; private set; }
+    public Vector3 RaycastPoint { get; private set; }
 
     private RaycastHit _raycastHit;
 
@@ -12,7 +12,7 @@ public class LegRaycast : MonoBehaviour
     {
         if (Physics.Raycast(transform.position, Vector3.down, out _raycastHit))
         {
-            LegRaycastPoint = _raycastHit.point;
+            RaycastPoint = _raycastHit.point;
         }
     }
 }
