@@ -5,8 +5,8 @@ public class Joystick : MonoBehaviour
 {
     public float DeadZone;
 
-    [HideInInspector] public float PositionX;
-    [HideInInspector] public float PositionY;
+    public float PositionX { get; private set; }
+    public float PositionY { get; private set; }
 
     [SerializeField] private Image _joystickBorder;
     [SerializeField] private Image _joystickCenter;
