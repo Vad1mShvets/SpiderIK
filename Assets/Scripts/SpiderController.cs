@@ -16,16 +16,6 @@ public class SpiderController : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-
-        StartCoroutine(Init());
-    }
-
-    private IEnumerator Init()
-    {
-        yield return new WaitForEndOfFrame();
-
-        for (int i = 0; i < _legs.Length; i++)
-            _legs[i].TargetLegPosition = _legs[i].LegRaycast.RaycastPoint;
     }
 
     private void Update()
@@ -72,30 +62,22 @@ public class SpiderController : MonoBehaviour
 
     private void LegsMove()
     {
-        for (int i = 0; i < _legs.Length; i++)
+        foreach (var leg in _legs)
         {
-            var leg = _legs[i];
+            if (leg.StepInProgress)
+                return;
 
-            Vector3 direction = leg.LegRaycast.RaycastPoint - leg.TargetLegPosition;
-
-            if (direction.magnitude >= _controlSettings.StepLength)
-            {
-                StartCoroutine(MakeStep(leg));
-            }
-            else
-            {
-                leg.LegTransform.position = leg.TargetLegPosition;
-            }
+            StartCoroutine(MakeStep(leg));
         }
     }
 
     private IEnumerator MakeStep(LegData leg)
     {
-        leg.TargetLegPosition = leg.LegRaycast.RaycastPoint;
+        leg.StepInProgress = true;
+        yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
 
         leg.LegTransform.position = leg.LegRaycast.RaycastPoint;
-
-        yield return null;
+        leg.StepInProgress = false;
     }
 }
 
@@ -110,9 +92,10 @@ public struct ControlSettings
 }
 
 [System.Serializable]
-public struct LegData
+public class LegData
 {
-    public Vector3 TargetLegPosition;
     public Transform LegTransform;
     public LegRaycast LegRaycast;
+
+    public bool StepInProgress { get; set; }
 }
