@@ -59,15 +59,17 @@ public class SpiderController : MonoBehaviour
 
     private void Controls()
     {
-        float vertical = Input.GetAxis("Vertical");
-        float horizontal = Input.GetAxis("Horizontal");
+        Vector3 joystickDirection = new Vector3(_controlSettings.JoystickController.Horizontal, 0, _controlSettings.JoystickController.Vertical);
 
-        _moveDirection = transform.forward * vertical * _controlSettings.MoveSpeed;
-
-        if (horizontal != 0)
-            _rigidbody.AddTorque(0, horizontal * _controlSettings.RotateSpeed, 0);
+        if (joystickDirection.magnitude != 0)
+        {
+            _moveDirection = _controlSettings.MoveSpeed * joystickDirection;
+            transform.forward = joystickDirection;
+        }
         else
-            _rigidbody.rotation = transform.rotation;
+        {
+            _moveDirection = Vector3.zero;
+        }
     }
 
     private void LegsMove()
@@ -103,6 +105,7 @@ public class SpiderController : MonoBehaviour
 public struct ControlSettings
 {
     public Joystick JoystickController;
+    public AnimationCurve AnimationCurve;
     public float FloatingHeight;
     public float FloatingForce;
     public float MoveSpeed;

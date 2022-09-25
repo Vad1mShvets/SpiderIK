@@ -36,8 +36,8 @@ public class Joystick : MonoBehaviour
 
     private void ControlJoystick()
     {
-        Vector2 direction = Input.mousePosition - _joystickBorder.rectTransform.position;
-        Vector2 normalizedDirection = direction.normalized;
+        Direction = Input.mousePosition - _joystickBorder.rectTransform.position;
+        Vector2 normalizedDirection = Direction.normalized;
         Vector2 fixedDirection = normalizedDirection * _dragLimit;
 
         if (fixedDirection.magnitude > DeadZone)
@@ -51,12 +51,12 @@ public class Joystick : MonoBehaviour
             }
             else
             {
-                if (direction.magnitude < _dragLimit)
+                if (Direction.magnitude < _dragLimit)
                 {
                     _joystickCenter.rectTransform.position = Input.mousePosition;
 
-                    Horizontal = Mathf.Clamp(direction.x, -_dragLimit, _dragLimit) / _dragLimit;
-                    Vertical = Mathf.Clamp(direction.y, -_dragLimit, _dragLimit) / _dragLimit;
+                    Horizontal = Mathf.Clamp(Direction.x, -_dragLimit, _dragLimit) / _dragLimit;
+                    Vertical = Mathf.Clamp(Direction.y, -_dragLimit, _dragLimit) / _dragLimit;
                 }
                 else
                 {
