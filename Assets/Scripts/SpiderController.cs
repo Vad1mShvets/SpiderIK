@@ -46,13 +46,15 @@ public class SpiderController : MonoBehaviour
         bool _timeToUp = false;
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, Vector3.down, out hit))
+        if (Physics.Raycast(transform.position, Vector3.down + transform.forward, out hit))
         {
             _timeToUp = true;
 
             Ray ray = new Ray(hit.point, Vector3.up);
-            _forceDirection = (ray.GetPoint(_controlSettings.FloatingHeight) - transform.position) * _controlSettings.FloatingForce;
+            _forceDirection = (new Vector3(transform.position.x, ray.GetPoint(_controlSettings.FloatingHeight).y, transform.position.z) - transform.position) * _controlSettings.FloatingForce;
         }
+
+        Debug.DrawLine(transform.position, hit.point, Color.red);
 
         return _timeToUp;
     }
@@ -105,7 +107,7 @@ public class SpiderController : MonoBehaviour
 public struct ControlSettings
 {
     public Joystick JoystickController;
-    public AnimationCurve AnimationCurve;
+    public AnimationCurve StepHeightAnimation;
     public float FloatingHeight;
     public float FloatingForce;
     public float MoveSpeed;
