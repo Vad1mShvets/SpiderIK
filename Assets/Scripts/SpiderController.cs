@@ -18,6 +18,8 @@ public class SpiderController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
 
         StartCoroutine(Init());
+
+        Application.targetFrameRate = 144;
     }
 
     private IEnumerator Init()
